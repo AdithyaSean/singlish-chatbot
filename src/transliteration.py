@@ -13,17 +13,16 @@ def sinhala_to_singlish(sinhala_word):
         'ථ': 'tha', 'ද': 'da', 'ධ': 'dha', 'න': 'na', 'ප': 'pa', 'ඵ': 'pa', 'බ': 'ba', 'භ': 'bha',
         'ම': 'ma', 'ය': 'ya', 'ර': 'ra', 'ල': 'la', 'ව': 'wa', 'ශ': 'sha', 'ෂ': 'sha', 'ස': 'sa',
         'හ': 'ha', 'ළ': 'la', 'ෆ': 'fa', 'ං': 'ng', 'ඃ': 'h',
-        # ... (Add any other special characters or independent vowels)
     }
 
     # Vowel modifiers and their corresponding sounds
     vowel_modifiers = {
         '්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'aa', 'ි': 'i', 'ී': 'ee', 'ු': 'u', 'ූ': 'oo',
         'ෙ': 'e', 'ේ': 'ee', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'oo', 'ෞ': 'au',
-        'ෟ': 'ru', 'ෳ': 'ruu'
+        'ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya'
     }
 
-    english_word = ""
+    singlish_word = ""
     i = 0
     while i < len(sinhala_word):
         char = sinhala_word[i]
@@ -33,23 +32,15 @@ def sinhala_to_singlish(sinhala_word):
             next_char = sinhala_word[i + 1]
             if next_char in vowel_modifiers:
                 combined_char = char + next_char
-                english_word += sinhala_mapping.get(combined_char, sinhala_mapping.get(char, '') + vowel_modifiers.get(next_char, ''))
+                singlish_word += sinhala_mapping.get(combined_char, sinhala_mapping.get(char, '') + vowel_modifiers.get(next_char, ''))
                 i += 2  # Skip the next character (vowel modifier)
                 continue
 
-        # Handle yansaya (්‍ය)
-        if char == '්‍ය':
-            prev_char = sinhala_word[i - 1]
-            if prev_char in ['න්', 'ද', 'ධ']:
-                english_word = english_word[:-1] + 'y' + sinhala_mapping.get(prev_char, '') + 'a'
-                i += 1
-                continue
-
         # Default case: transliterate individual character
-        english_word += sinhala_mapping.get(char, char)
+        singlish_word += sinhala_mapping.get(char, char)
         i += 1
 
-    return english_word
+    return singlish_word
 
 def transliterate_jsonl(input_file, output_file):
     """Transliterates Sinhala words in a JSONL file to Singlish."""

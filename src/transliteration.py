@@ -1,25 +1,11 @@
 import json
 
 def sinhala_to_singlish(sinhala_text):
-    vowels = {
-        'අ': 'a', 'ආ': 'aa', 'ඇ': 'a', 'ඈ': 'aa', 'ඉ': 'i', 'ඊ': 'ee', 'උ': 'u', 'ඌ': 'uu',
-        'ඍ': 'ru', 'ඎ': 'ruu', 'ඏ': 'lu', 'ඐ': 'luu', 'එ': 'e', 'ඒ': 'ee', 'ඓ': 'ai', 'ඔ': 'o',
-        'ඕ': 'oo', 'ඖ': 'au'
-    }
+    vowels = {'අ': 'a', 'ආ': 'aa', 'ඇ': 'a', 'ඈ': 'aa', 'ඉ': 'i', 'ඊ': 'ee', 'උ': 'u', 'ඌ': 'uu','ඍ': 'ru', 'ඎ': 'ruu', 'ඏ': 'lu', 'ඐ': 'luu', 'එ': 'e', 'ඒ': 'ee', 'ඓ': 'ai', 'ඔ': 'o','ඕ': 'oo', 'ඖ': 'au'}
 
-    consonants = {
-        'ක': 'k', 'ඛ': 'kh', 'ග': 'g', 'ඝ': 'gh', 'ඞ': 'ng', 'ච': 'ch', 'ඡ': 'ch', 'ජ': 'j',
-        'ඣ': 'jh', 'ඤ': 'ny', 'ට': 't', 'ඨ': 't', 'ඩ': 'd', 'ඪ': 'd', 'ණ': 'n', 'ත': 'th',
-        'ථ': 'th', 'ද': 'd', 'ඳ': 'nd', 'ධ': 'dh', 'න': 'n', 'ප': 'p', 'ඵ': 'p', 'බ': 'b', 'භ': 'bh',
-        'ම': 'm', 'ය': 'y', 'ර': 'r', 'ල': 'l', 'ව': 'w', 'ශ': 'sh', 'ෂ': 'sh', 'ස': 's',
-        'හ': 'h', 'ළ': 'l', 'ෆ': 'f'
-    }
+    consonants = {'ක': 'k', 'ඛ': 'kh', 'ග': 'g', 'ඟ': 'ng', 'ඝ': 'gh', 'ඞ': 'ng', 'ච': 'ch', 'ඡ': 'ch', 'ජ': 'j', 'ඣ': 'jh', 'ඤ': 'ny', 'ට': 't', 'ඨ': 't', 'ඩ': 'd', 'ඪ': 'd', 'ණ': 'n', 'ත': 'th', 'ථ': 'th', 'ද': 'd', 'ඳ': 'nd', 'ධ': 'dh', 'න': 'n', 'ප': 'p', 'ඵ': 'p', 'බ': 'b', 'භ': 'bh', 'ඹ': 'mba', 'ම': 'm', 'ය': 'y', 'ර': 'r', 'ල': 'l', 'ව': 'v', 'ශ': 'sh', 'ෂ': 'sh', 'ස': 's','හ': 'h', 'ළ': 'l', 'ෆ': 'f'}
 
-    vowel_modifiers = {
-        '්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'a', 'ි': 'i', 'ී': 'i', 'ු': 'u', 'ූ': 'u',
-        'ෙ': 'e', 'ේ': 'e', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'o', 'ෞ': 'au',
-        'ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya', 'ං': 'n', 'ඃ': 'h'
-    }
+    vowel_modifiers = {'්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'a', 'ි': 'i', 'ී': 'i', 'ු': 'u', 'ූ': 'u','ෙ': 'e', 'ේ': 'e', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'o', 'ෞ': 'au','ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya', 'ං': 'n', 'ඃ': 'h', 'ෘ': 'ra'}
 
     singlish_text = ""
     i = 0
@@ -50,21 +36,21 @@ def sinhala_to_singlish(sinhala_text):
                 i += 1
                 continue
 
-        singlish_text += ' '
+        singlish_text += sinhala_text[i]
+        singlish_text = singlish_text.replace(u'\u200D', '')
         i += 1
 
     return singlish_text
 
 def transliterate_to_jsonl(input_file, output_file):
-
     with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
         for line in infile:
             try:
                 data = json.loads(line)
-                if 'title' in data:
-                    data['title'] = sinhala_to_singlish(data['title'])
-                if 'text' in data:
-                    data['text'] = sinhala_to_singlish(data['text'])
+                # Transliterate all values in the dictionary
+                for key, value in data.items():
+                    if isinstance(value, str):
+                        data[key] = sinhala_to_singlish(value)
                 outfile.write(json.dumps(data, ensure_ascii=False) + '\n')
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON: {e}")

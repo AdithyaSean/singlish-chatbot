@@ -1,49 +1,61 @@
 import json
 
-def sinhala_to_singlish(sinhala_word):
-    """Transliterates a Sinhala word to Singlish."""
-
-    # Base consonants and independent vowels
-    sinhala_mapping = {
+def sinhala_to_singlish(sinhala_text):
+    vowels = {
         'අ': 'a', 'ආ': 'aa', 'ඇ': 'a', 'ඈ': 'aa', 'ඉ': 'i', 'ඊ': 'ee', 'උ': 'u', 'ඌ': 'uu',
         'ඍ': 'ru', 'ඎ': 'ruu', 'ඏ': 'lu', 'ඐ': 'luu', 'එ': 'e', 'ඒ': 'ee', 'ඓ': 'ai', 'ඔ': 'o',
-        'ඕ': 'oo', 'ඖ': 'au',
-        'ක': 'ka', 'ඛ': 'kha', 'ග': 'ga', 'ඝ': 'gha', 'ඞ': 'nga', 'ච': 'cha', 'ඡ': 'cha', 'ජ': 'ja',
-        'ඣ': 'jha', 'ඤ': 'nya', 'ට': 'ta', 'ඨ': 'ta', 'ඩ': 'da', 'ඪ': 'da', 'ණ': 'na', 'ත': 'tha',
-        'ථ': 'tha', 'ද': 'da', 'ධ': 'dha', 'න': 'na', 'ප': 'pa', 'ඵ': 'pa', 'බ': 'ba', 'භ': 'bha',
-        'ම': 'ma', 'ය': 'ya', 'ර': 'ra', 'ල': 'la', 'ව': 'wa', 'ශ': 'sha', 'ෂ': 'sha', 'ස': 'sa',
-        'හ': 'ha', 'ළ': 'la', 'ෆ': 'fa', 'ං': 'ng', 'ඃ': 'h',
+        'ඕ': 'oo', 'ඖ': 'au'
     }
 
-    # Vowel modifiers and their corresponding sounds
+    consonants = {
+        'ක': 'k', 'ඛ': 'kh', 'ග': 'g', 'ඝ': 'gh', 'ඞ': 'ng', 'ච': 'ch', 'ඡ': 'ch', 'ජ': 'j',
+        'ඣ': 'jh', 'ඤ': 'ny', 'ට': 't', 'ඨ': 't', 'ඩ': 'd', 'ඪ': 'd', 'ණ': 'n', 'ත': 'th',
+        'ථ': 'th', 'ද': 'd', 'ඳ': 'nd', 'ධ': 'dh', 'න': 'n', 'ප': 'p', 'ඵ': 'p', 'බ': 'b', 'භ': 'bh',
+        'ම': 'm', 'ය': 'y', 'ර': 'r', 'ල': 'l', 'ව': 'w', 'ශ': 'sh', 'ෂ': 'sh', 'ස': 's',
+        'හ': 'h', 'ළ': 'l', 'ෆ': 'f'
+    }
+
     vowel_modifiers = {
-        '්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'aa', 'ි': 'i', 'ී': 'ee', 'ු': 'u', 'ූ': 'oo',
-        'ෙ': 'e', 'ේ': 'ee', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'oo', 'ෞ': 'au',
-        'ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya'
+        '්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'a', 'ි': 'i', 'ී': 'i', 'ු': 'u', 'ූ': 'u',
+        'ෙ': 'e', 'ේ': 'e', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'o', 'ෞ': 'au',
+        'ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya', 'ං': 'n', 'ඃ': 'h'
     }
 
-    singlish_word = ""
+    singlish_text = ""
     i = 0
-    while i < len(sinhala_word):
-        char = sinhala_word[i]
+    length = len(sinhala_text)
 
-        # Check for consonant-vowel combinations
-        if char in sinhala_mapping and i + 1 < len(sinhala_word):
-            next_char = sinhala_word[i + 1]
+    while i < length:
+        char = sinhala_text[i]
+
+        if char in vowels and i < len(sinhala_text):
+            singlish_char = vowels.get(char, vowels.get(char, char))
+            singlish_text += singlish_char
+            i += 1
+            continue
+
+        if char in consonants and i + 1 < len(sinhala_text):
+            next_char = sinhala_text[i + 1]
+
             if next_char in vowel_modifiers:
                 combined_char = char + next_char
-                singlish_word += sinhala_mapping.get(combined_char, sinhala_mapping.get(char, '') + vowel_modifiers.get(next_char, ''))
-                i += 2  # Skip the next character (vowel modifier)
+                singlish_char = consonants.get(combined_char, consonants.get(char, char) + vowel_modifiers.get(next_char, next_char))
+                singlish_text += singlish_char
+                i += 2
+                continue
+            else:
+                singlish_char = consonants.get(char, consonants.get(char, char))
+                singlish_char += 'a'
+                singlish_text += singlish_char
+                i += 1
                 continue
 
-        # Default case: transliterate individual character
-        singlish_word += sinhala_mapping.get(char, char)
+        singlish_text += ' '
         i += 1
 
-    return singlish_word
+    return singlish_text
 
-def transliterate_jsonl(input_file, output_file):
-    """Transliterates Sinhala words in a JSONL file to Singlish."""
+def transliterate_to_jsonl(input_file, output_file):
 
     with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
         for line in infile:
@@ -57,8 +69,7 @@ def transliterate_jsonl(input_file, output_file):
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON: {e}")
 
-# Get input and output file paths
 input_file = input("Enter the path to your Sinhala input JSONL file: ")
 output_file = input("Enter the desired path for the Singlish output JSONL file: ")
 
-transliterate_jsonl(input_file, output_file)
+transliterate_to_jsonl(input_file, output_file)

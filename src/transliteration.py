@@ -1,45 +1,45 @@
 import json
+import re
+
+
 
 def sinhala_to_singlish(sinhala_text):
     vowels = {'අ': 'a', 'ආ': 'aa', 'ඇ': 'a', 'ඈ': 'aa', 'ඉ': 'i', 'ඊ': 'ee', 'උ': 'u', 'ඌ': 'uu','ඍ': 'ru', 'ඎ': 'ruu', 'ඏ': 'lu', 'ඐ': 'luu', 'එ': 'e', 'ඒ': 'ee', 'ඓ': 'ai', 'ඔ': 'o','ඕ': 'oo', 'ඖ': 'au'}
+    consonants = {'ක': 'k', 'ඛ': 'kh', 'ග': 'g', 'ඟ': 'ng', 'ඝ': 'gh', 'ඞ': 'ng', 'ච': 'ch', 'ඡ': 'ch', 'ජ': 'j', 'ඣ': 'jh', 'ඤ': 'ny', 'ට': 't', 'ඨ': 't', 'ඩ': 'd', 'ඬ': 'nd', 'ඪ': 'd', 'ණ': 'n', 'ත': 'th', 'ථ': 'th', 'ද': 'd', 'ඳ': 'nd', 'ධ': 'dh', 'න': 'n', 'ප': 'p', 'ඵ': 'p', 'බ': 'b', 'භ': 'bh', 'ඹ': 'mba', 'ම': 'm', 'ය': 'y', 'ර': 'r', 'ල': 'l', 'ව': 'v', 'ශ': 'sh', 'ෂ': 'sh', 'ස': 's','හ': 'h', 'ළ': 'l', 'ෆ': 'f'}
+    vowel_modifiers = {'්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'a', 'ි': 'i', 'ී': 'i', 'ු': 'u', 'ූ': 'u','ෙ': 'e', 'ේ': 'e', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'o', 'ෞ': 'au','ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya', 'ං': 'an', 'ඃ': 'h', 'ෘ': 'ru'}
 
-    consonants = {'ක': 'k', 'ඛ': 'kh', 'ග': 'g', 'ඟ': 'ng', 'ඝ': 'gh', 'ඞ': 'ng', 'ච': 'ch', 'ඡ': 'ch', 'ජ': 'j', 'ඣ': 'jh', 'ඤ': 'ny', 'ට': 't', 'ඨ': 't', 'ඩ': 'd', 'ඪ': 'd', 'ණ': 'n', 'ත': 'th', 'ථ': 'th', 'ද': 'd', 'ඳ': 'nd', 'ධ': 'dh', 'න': 'n', 'ප': 'p', 'ඵ': 'p', 'බ': 'b', 'භ': 'bh', 'ඹ': 'mba', 'ම': 'm', 'ය': 'y', 'ර': 'r', 'ල': 'l', 'ව': 'v', 'ශ': 'sh', 'ෂ': 'sh', 'ස': 's','හ': 'h', 'ළ': 'l', 'ෆ': 'f'}
+    invisible_characters = r'[\u200D\u200C\u2063]'
 
-    vowel_modifiers = {'්': '', 'ා': 'a', 'ැ': 'a', 'ෑ': 'a', 'ි': 'i', 'ී': 'i', 'ු': 'u', 'ූ': 'u','ෙ': 'e', 'ේ': 'e', 'ෛ': 'ai', 'ො': 'o', 'ෝ': 'o', 'ෞ': 'au','ෟ': 'ru', 'ෳ': 'ruu', '්‍ය': 'ya', 'ං': 'n', 'ඃ': 'h', 'ෘ': 'ra'}
 
     singlish_text = ""
     i = 0
-    length = len(sinhala_text)
 
-    while i < length:
-        char = sinhala_text[i]
-
-        if char in vowels and i < len(sinhala_text):
-            singlish_char = vowels.get(char, vowels.get(char, char))
-            singlish_text += singlish_char
+    while i < len(sinhala_text):
+        singlish_text.replace(u'\u200D\u200C\u2063', '')
+        if sinhala_text[i] in vowels:
+            singlish_text += vowels.get(sinhala_text[i])
             i += 1
-            continue
 
-        if char in consonants and i + 1 < len(sinhala_text):
-            next_char = sinhala_text[i + 1]
+        elif sinhala_text[i] in consonants:
+            singlish_text += consonants.get(sinhala_text[i])
+            i += 1
 
-            if next_char in vowel_modifiers:
-                combined_char = char + next_char
-                singlish_char = consonants.get(combined_char, consonants.get(char, char) + vowel_modifiers.get(next_char, next_char))
-                singlish_text += singlish_char
-                i += 2
-                continue
-            else:
-                singlish_char = consonants.get(char, consonants.get(char, char))
-                singlish_char += 'a'
-                singlish_text += singlish_char
+            if i < len(sinhala_text) and sinhala_text[i] in vowel_modifiers:
+                singlish_text += vowel_modifiers.get(sinhala_text[i])
                 i += 1
-                continue
 
-        singlish_text += sinhala_text[i]
-        singlish_text = singlish_text.replace(u'\u200D', '')
-        i += 1
+                if i < len(sinhala_text) and sinhala_text[i] in vowel_modifiers:
+                    singlish_text += vowel_modifiers.get(sinhala_text[i])
+                    i += 1
 
+            else:
+                singlish_text += 'a'
+
+        else:
+            singlish_text += sinhala_text[i]
+            i += 1
+            
+    singlish_text = re.sub(invisible_characters, '', singlish_text)
     return singlish_text
 
 def transliterate_to_jsonl(input_file, output_file):
@@ -47,7 +47,6 @@ def transliterate_to_jsonl(input_file, output_file):
         for line in infile:
             try:
                 data = json.loads(line)
-                # Transliterate all values in the dictionary
                 for key, value in data.items():
                     if isinstance(value, str):
                         data[key] = sinhala_to_singlish(value)

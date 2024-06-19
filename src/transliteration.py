@@ -8,7 +8,6 @@ def sinhala_to_singlish(sinhala_text):
 
     invisible_characters = r'[\u200D\u200C\u2063]'
 
-
     singlish_text = ""
     i = 0
 

@@ -39,18 +39,26 @@ def sinhala_to_singlish(sinhala_text):
     singlish_text = re.sub(invisible_characters, '', singlish_text)
     return singlish_text
 
+def transliterate_value(value):
+    if isinstance(value, str):
+        return sinhala_to_singlish(value)
+    elif isinstance(value, dict):
+        return {k: transliterate_value(v) for k, v in value.items()}
+    elif isinstance(value, list):
+        return [transliterate_value(item) for item in value]
+    else:
+        return value
+
 def transliterate_to_jsonl(input_file, output_file):
     with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
         for line in infile:
             try:
                 data = json.loads(line)
-                for key, value in data.items():
-                    if isinstance(value, str):
-                        data[key] = sinhala_to_singlish(value)
-                outfile.write(json.dumps(data, ensure_ascii=False) + '\n')
+                transliterated_data = transliterate_value(data)
+                outfile.write(json.dumps(transliterated_data, ensure_ascii=False) + '\n')
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON: {e}")
-
+                
 input_file = input("Enter the path to your Sinhala input JSONL file: ")
 output_file = input("Enter the desired path for the Singlish output JSONL file: ")
 

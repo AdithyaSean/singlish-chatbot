@@ -26,8 +26,8 @@ with open('datasets/singlish/reddit.jsonl', 'r', encoding='utf-8') as file:
                     # Format as \uXXXX for characters in the BMP
                     non_ascii_unicode_numbers.add(f'\\u{ord(char):04X}')
                 else:
-                    # Format as \UXXXXXXXX for characters outside the BMP
-                    non_ascii_unicode_numbers.add(f'\\U{ord(char):08X}')
+                    # Format as \UXXXXX for characters outside the BMP
+                    non_ascii_unicode_numbers.add(f'\\U{ord(char):05X}')
     
     # Convert the set to a sorted list to display the Unicode representations in order
     sorted_non_ascii_unicode_numbers = sorted(list(non_ascii_unicode_numbers))

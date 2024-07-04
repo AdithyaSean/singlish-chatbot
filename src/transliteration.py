@@ -56,7 +56,7 @@ def transliterate_to_jsonl(input_file, output_file):
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON: {e}")
                 
-input_file = 'datasets/sinhala/' + input("Name of your input file: ") + '.jsonl'
-output_file = 'datasets/singlish/' + input("Name of your output file: ") + '.jsonl'
+input_file = 'datasets/sinhala/sinhala_basic_train_dataset2_part' + input("Name of your input file: ") + '.jsonl'
+output_file = 'datasets/singlish/singlish_basic_train_dataset2_part' + input("Name of your output file: ") + '.jsonl'
 
 transliterate_to_jsonl(input_file, output_file)

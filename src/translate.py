@@ -1,8 +1,8 @@
-from googletrans import Translator
+from google.cloud import translate_v2 as translate
 import json
 
-# Initialize the translator
-translator = Translator()
+# Initialize the Google Cloud Translate client
+translate_client = translate.Client()
 
 def translate_content_to_sinhala(input_file, output_file):
 	with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
@@ -14,8 +14,8 @@ def translate_content_to_sinhala(input_file, output_file):
 			for message in data['messages']:
 				if 'content' in message:
 					# Translate the content to Sinhala
-					translated = translator.translate(message['content'], dest='si')
-					message['content'] = translated.text
+					result = translate_client.translate(message['content'], target_language='si')
+					message['content'] = result['translatedText']
 			
 			# Write the updated JSON line to the output file
 			json.dump(data, outfile, ensure_ascii=False)

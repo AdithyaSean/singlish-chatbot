@@ -8,16 +8,6 @@
   packages = [
      pkgs.python311
      pkgs.python311Packages.pip
-     pkgs.python311Packages.opencv4
-     pkgs.opencv
-     pkgs.kaggle
-     pkgs.git
-     pkgs.openssh
-     pkgs.curl
-     pkgs.openvpn
-    # pkgs.go
-    # pkgs.nodejs_20
-    # pkgs.nodePackages.nodemon
   ];
 
   # Sets environment variables in the workspace

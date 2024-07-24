@@ -11,7 +11,7 @@ parameters = {
 model = TextGenerationModel.from_pretrained("text-bison@002")
 model = model.get_tuned_model("projects/211555470797/locations/us-central1/models/6051651526139576320")
 response = model.predict(
-    """oyata kohomada?""",
+    """lankawe usama kanda mokadda?""",
     **parameters
 )
 print(f"Response from Model: {response.text}")

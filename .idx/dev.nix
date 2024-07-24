@@ -14,6 +14,7 @@
      pkgs.git
      pkgs.openssh
      pkgs.curl
+     pkgs.purl
      pkgs.openvpn
     # pkgs.go
     # pkgs.nodejs_20

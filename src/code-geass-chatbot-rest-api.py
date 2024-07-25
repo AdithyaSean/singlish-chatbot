@@ -15,10 +15,15 @@ def predict():
 	parameters = {
 		"candidate_count": 1,
 		"max_output_tokens": 1024,
-		"temperature": 0.9,
+		"temperature": 1,
 		"top_p": 1
 	}
 	response = model.predict(input_text, **parameters)
+	
+	# Print to server's debug output
+	print(f"Received prompt: {input_text}")
+	print(f"Generated response: {response.text}")
+	
 	return jsonify({"response": response.text})
 
 if __name__ == '__main__':
